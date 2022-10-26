@@ -50,11 +50,43 @@ const servicios = [
         p410: true,
     },
     {
+        servicio: "Análisis de laboratorio",
+        aclaracion: "Con prestadores de cartilla",
+        descripcion: "Sin autorización previa y sin límites",
+        p210: true,
+        p310: true,
+        p410: true,
+    },
+    {
         servicio: "Prótesis internacionales",
         aclaracion: "Para cualquier tipo de cirugía",
         descripcion: "Con autorización previa",
         p210: false,
         p310: false,
+        p410: true,
+    },
+    {
+        servicio: "Psicología",
+        aclaracion: "Hasta 30 sesiones por año",
+        descripcion: "Con autorización previa",
+        p210: true,
+        p310: true,
+        p410: true,
+    },
+    {
+        servicio: "Kinesiología",
+        aclaracion: "Hasta 30 sesiones por año",
+        descripcion: "Con autorización previa",
+        p210: true,
+        p310: true,
+        p410: true,
+    },
+    {
+        servicio: "Nutrición",
+        aclaracion: "Hasta 30 sesiones por año",
+        descripcion: "Con autorización previa",
+        p210: true,
+        p310: true,
         p410: true,
     },
 
@@ -216,6 +248,11 @@ search.addEventListener("input", () => {
 
 btnCotizar.addEventListener("click", () => {
     analisisGrupoFamiliar(grupoFamiliar)
-    alert(cotizacion)
+    Swal.fire(
+        'Tu cotización',
+        'El precio de tu plan es ' + cotizacion,
+        'success'
+      )
+    // alert(cotizacion)
 })
 
