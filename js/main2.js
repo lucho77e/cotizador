@@ -13,6 +13,7 @@ const valorCuotaLista = 10000;
 
 const search = document.querySelector("#buscador"),
 cardsServicios = document.querySelector("#cards"),
+btnCotizar = document.querySelector("#cotizar"),
 tablaFamilia = document.querySelector("#tablaFamilia"),
 tabla = document.querySelector("#tabla"),
 tipo = document.querySelectorAll('input[name="tipoRadio"]'),
@@ -150,23 +151,24 @@ function familiar(tipo, nombre, edad) {
 // Botón agregar familiar
 agregar.addEventListener('click', (e)=> {
     e.preventDefault();
-    console.log(agregar.id);
     const familiarNuevo = new familiar(
         radioSelected,
         nombre.value,
         edad.value
     )
     cargarFamiliar(grupoFamiliar, familiarNuevo)
-    tabla.style.display = "table";
+    if (grupoFamiliar != []) {
+        tabla.style.display = "table";
+    }
     htmlFamilia(grupoFamiliar)
     arrayBotones = document.querySelectorAll("#botBorrar");
     arrayBotones.forEach(btn => {
         btn.addEventListener("click", ()=> {
             grupoFamiliar.pop()
-            htmlFamilia(grupoFamiliar)
-            if (grupoFamiliar === []) {
+            if (grupoFamiliar = []) {
                 tabla.style.display = "none";
             }
+            htmlFamilia(grupoFamiliar)
         })
     });
 });
@@ -179,9 +181,12 @@ function filtrarServicio(arr, filtro){
     htmlServicios(filtrado)
 }
 
+
+let cotizacion
+
 // Calcular cotizacion
 function analisisGrupoFamiliar (arr) {
-    let cotizacion = 0
+    cotizacion = 0
     for (const integrante of grupoFamiliar) {
         if (integrante.tipo != "Hijo") {
             if (integrante.edad === "Entre 26 y 35") {
@@ -195,7 +200,6 @@ function analisisGrupoFamiliar (arr) {
             cotizacion = cotizacion + (valorCuotaLista * multiplicador.adicionalHijo)
         }
     }
-    console.log(cotizacion)
 }
 
 // Listener
@@ -204,5 +208,8 @@ search.addEventListener("input", () => {
     filtrarServicio(servicios, searchKey)
 })
 
-
+btnCotizar.addEventListener("click", () => {
+    analisisGrupoFamiliar(grupoFamiliar)
+    alert(cotizacion)
+})
 
