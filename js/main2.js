@@ -109,11 +109,24 @@ function htmlFamilia(arr) {
         <td>${item.nombre}</td>
         <td>${item.edad}</td>
         <td>${item.tipo}</td>
-        <td><button type="button" id="botBorrar" class="btn btn-danger btn-sm">Borrar</button></td>
+        <td><button type="button" id="${item.id}" class="btn btn-danger btn-sm">Borrar</button></td>
         </tr>`
         tablaFamilia.innerHTML += html
     }
     limpiarCampos()
+    arrayBotones = document.querySelectorAll(".btn-danger");
+    arrayBotones.forEach(btn => {
+        btn.addEventListener("click", ()=> {
+            // grupoFamiliar.pop()
+            grupoFamiliar = grupoFamiliar.filter(el => el.id != btn.id  )
+            if (grupoFamiliar == "") {
+                tabla.style.display = "none";
+                // console.log("paso por aca")
+            }
+            htmlFamilia(grupoFamiliar)
+            // console.log("HOla")
+        })
+    });
 }
 
 
@@ -146,6 +159,7 @@ function familiar(tipo, nombre, edad) {
     this.tipo = tipo
     this.nombre = nombre
     this.edad = edad
+    this.id = grupoFamiliar.length
 }
 
 // Botón agregar familiar
@@ -161,17 +175,9 @@ agregar.addEventListener('click', (e)=> {
         tabla.style.display = "table";
     }
     htmlFamilia(grupoFamiliar)
-    arrayBotones = document.querySelectorAll("#botBorrar");
-    arrayBotones.forEach(btn => {
-        btn.addEventListener("click", ()=> {
-            grupoFamiliar.pop()
-            if (grupoFamiliar = []) {
-                tabla.style.display = "none";
-            }
-            htmlFamilia(grupoFamiliar)
-        })
-    });
 });
+
+
 
 // Busqueda
 function filtrarServicio(arr, filtro){
