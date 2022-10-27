@@ -1,6 +1,8 @@
 let searchKey = ""
 let radioSelected
-let arrayBotones = document.querySelectorAll("#botBorrar")
+let arrayBotones = document.querySelectorAll("#botBorrar");
+let tipo
+let posicion
 
 const multiplicador = {
     mas26 : 1.1,
@@ -13,10 +15,11 @@ const valorCuotaLista = 10000;
 
 const search = document.querySelector("#buscador"),
 cardsServicios = document.querySelector("#cards"),
+radioTitular= document.querySelector("#titular"),
+radioConyuge= document.querySelector("#conyuge"),
 btnCotizar = document.querySelector("#cotizar"),
 tablaFamilia = document.querySelector("#tablaFamilia"),
 tabla = document.querySelector("#tabla"),
-tipo = document.querySelectorAll('input[name="tipoRadio"]'),
 nombre = document.querySelector("#nombreApellido"),
 edad = document.querySelector("#edadSelect"),
 agregar = document.querySelector("#agregar");
@@ -93,6 +96,8 @@ const servicios = [
 ];
 
 
+
+
 // HTML Listar servicios 
 function htmlServicios(arr) {
     cardsServicios.innerHTML = ""
@@ -149,36 +154,53 @@ function htmlFamilia(arr) {
     arrayBotones = document.querySelectorAll(".btn-danger");
     arrayBotones.forEach(btn => {
         btn.addEventListener("click", ()=> {
-            // grupoFamiliar.pop()
-            grupoFamiliar = grupoFamiliar.filter(el => el.id != btn.id  )
+            buscarPos (grupoFamiliar, btn.id);
+            if (grupoFamiliar[posicion].tipo == "Titular") {
+                radioTitular.innerHTML = `<input class="form-check-input" type="radio" name="tipoRadio" value="Titular">
+                <label class="form-check-label" for="tipoRadio">Titular</label>`
+                escucharRadioTipo()
+            } else if (grupoFamiliar[posicion].tipo == "Cónyuge") {
+                radioConyuge.innerHTML = `<input class="form-check-input" type="radio" name="tipoRadio" value="Cónyuge">
+                <label class="form-check-label" for="tipoRadio">Cónyuge</label>`
+                escucharRadioTipo()
+            }
+
+            grupoFamiliar = grupoFamiliar.filter(el => el.id != btn.id)
             if (grupoFamiliar == "") {
                 tabla.style.display = "none";
-                // console.log("paso por aca")
+
             }
             htmlFamilia(grupoFamiliar)
-            // console.log("HOla")
+            
+
         })
     });
 }
 
 
-// Listener del Radio Tipo Afiliado
-for (const radio of tipo) {
-    radio.addEventListener('change', ()=>{
-        if (radio.checked) {
-            radioSelected = radio.value
-            if (radio.value != "Hijo") {
-                edad.innerHTML = `<option value="Entre 18 y 25">Entre 18 y 25</option>
-                <option value="Entre 26 y 35">Entre 26 y 35</option>
-                <option value="Más de 36">Más de 36</option>`
-            } else {
-                edad.innerHTML = `<option value="Entre 1 y 17">Entre 1 y 17</option>
-                <option value="Entre 18 y 25">Entre 18 y 25</option>`
-            }
-        }
-    })
-}
 
+
+// Listener del Radio Tipo Afiliado
+function escucharRadioTipo() {
+    radioSelected = ""
+    tipo = document.querySelectorAll('input[name="tipoRadio"]')
+    for (const radio of tipo) {
+        radio.addEventListener('change', ()=>{
+            if (radio.checked) {
+                radioSelected = radio.value
+                if (radio.value != "Hijo") {
+                    edad.innerHTML = `<option value="Entre 18 y 25">Entre 18 y 25</option>
+                    <option value="Entre 26 y 35">Entre 26 y 35</option>
+                    <option value="Más de 36">Más de 36</option>`
+                } else {
+                    edad.innerHTML = `<option value="Entre 1 y 17">Entre 1 y 17</option>
+                    <option value="Entre 18 y 25">Entre 18 y 25</option>`
+                }
+            }
+        })
+    }
+}
+escucharRadioTipo()
 
 // Funcion agregadora de familiar creado al grupo familiar
 function cargarFamiliar(arr, familiar) {
@@ -191,22 +213,44 @@ function familiar(tipo, nombre, edad) {
     this.tipo = tipo
     this.nombre = nombre
     this.edad = edad
-    this.id = grupoFamiliar.length
+    // this.id = grupoFamiliar.length
+    this.id = Date.now()
 }
+
+
 
 // Botón agregar familiar
 agregar.addEventListener('click', (e)=> {
     e.preventDefault();
-    const familiarNuevo = new familiar(
-        radioSelected,
-        nombre.value,
-        edad.value
-    )
-    cargarFamiliar(grupoFamiliar, familiarNuevo)
-    if (grupoFamiliar != []) {
-        tabla.style.display = "table";
+    if ((radioSelected == "") || (nombre.value == "") || (edad.value == "")) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Debes completar todos los campos!',
+        })
+    } else {
+        const familiarNuevo = new familiar(
+            radioSelected,
+            nombre.value,
+            edad.value
+        )
+        cargarFamiliar(grupoFamiliar, familiarNuevo)
+        if (grupoFamiliar != []) {
+            tabla.style.display = "table";
+        }
+        if (radioSelected == "Titular") {
+            radioTitular.innerHTML = `<input class="form-check-input" type="radio" name="tipoRadio" value="Titular" disabled>
+            <label class="form-check-label" for="tipoRadio">Titular</label>`
+            escucharRadioTipo()
+        } else if (radioSelected == "Cónyuge") {
+            radioConyuge.innerHTML = `<input class="form-check-input" type="radio" name="tipoRadio" value="Cónyuge" disabled>
+            <label class="form-check-label" for="tipoRadio">Cónyuge</label>`
+            escucharRadioTipo()
+        } else {
+            escucharRadioTipo()
+        }
+        htmlFamilia(grupoFamiliar)
     }
-    htmlFamilia(grupoFamiliar)
 });
 
 
@@ -256,3 +300,14 @@ btnCotizar.addEventListener("click", () => {
     // alert(cotizacion)
 })
 
+// Funcion buscar posicion en array
+function buscarPos (arr1, filtr) {
+    let id = 0
+    for (const item1 of arr1) {
+        if (item1.id == filtr) {
+            posicion = id   
+        } else {
+            id = id + 1
+        }
+    }
+}
