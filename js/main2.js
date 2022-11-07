@@ -25,6 +25,11 @@ edad = document.querySelector("#edadSelect"),
 agregar = document.querySelector("#agregar");
 
 grupoFamiliar = [];
+let familiaEnLs = JSON.parse(localStorage.getItem("grupoFamiliar"))
+
+const guardarLocal = (clave, valor) => {
+    localStorage.setItem(clave, valor)
+}
 
 
 const servicios = [
@@ -92,8 +97,8 @@ const servicios = [
         p310: true,
         p410: true,
     },
-
 ];
+
 
 
 
@@ -124,6 +129,13 @@ function htmlServicios(arr) {
 }
 
 htmlServicios(servicios)
+
+
+const pedirServicios = async () => {
+    const resp = await fetch ('./data/data.json');
+    const data = await resp;
+    console.log(data);
+}
 
 
 // Limpiar campos
@@ -164,12 +176,11 @@ function htmlFamilia(arr) {
                 <label class="form-check-label" for="tipoRadio">Cónyuge</label>`
                 escucharRadioTipo()
             }
-
             grupoFamiliar = grupoFamiliar.filter(el => el.id != btn.id)
             if (grupoFamiliar == "") {
                 tabla.style.display = "none";
-
             }
+            guardarLocal("grupoFamiliar", JSON.stringify(grupoFamiliar))
             htmlFamilia(grupoFamiliar)
             
 
@@ -213,7 +224,6 @@ function familiar(tipo, nombre, edad) {
     this.tipo = tipo
     this.nombre = nombre
     this.edad = edad
-    // this.id = grupoFamiliar.length
     this.id = Date.now()
 }
 
@@ -249,6 +259,7 @@ agregar.addEventListener('click', (e)=> {
         } else {
             escucharRadioTipo()
         }
+        guardarLocal("grupoFamiliar", JSON.stringify(grupoFamiliar))
         htmlFamilia(grupoFamiliar)
     }
 });
@@ -258,7 +269,7 @@ agregar.addEventListener('click', (e)=> {
 // Busqueda
 function filtrarServicio(arr, filtro){
     const filtrado = arr.filter((el) => {
-        return el.servicio.includes(filtro);
+        return el.servicio.toLowerCase().includes(filtro);
     })
     htmlServicios(filtrado)
 }
@@ -286,7 +297,7 @@ function analisisGrupoFamiliar (arr) {
 
 // Listener
 search.addEventListener("input", () => {
-    searchKey = search.value
+    searchKey = search.value.toLowerCase()
     filtrarServicio(servicios, searchKey)
 })
 
@@ -297,7 +308,7 @@ btnCotizar.addEventListener("click", () => {
         'El precio de tu plan es ' + cotizacion,
         'success'
       )
-    // alert(cotizacion)
+
 })
 
 // Funcion buscar posicion en array
@@ -310,4 +321,22 @@ function buscarPos (arr1, filtr) {
             id = id + 1
         }
     }
+}
+
+if (familiaEnLs != "") {
+    grupoFamiliar = familiaEnLs
+    htmlFamilia(grupoFamiliar)
+    tabla.style.display = "table"
+
+    for (const familiar of grupoFamiliar) {
+        if (familiar.tipo == "Titular") {
+            radioTitular.innerHTML = `<input class="form-check-input" type="radio" name="tipoRadio" value="Titular" disabled>
+            <label class="form-check-label" for="tipoRadio">Titular</label>`
+        } else if (familiar.tipo == "Cónyuge") {
+            radioConyuge.innerHTML = `<input class="form-check-input" type="radio" name="tipoRadio" value="Cónyuge" disabled>
+            <label class="form-check-label" for="tipoRadio">Cónyuge</label>`
+    }}
+
+} else {
+    tabla.style.display = "none"
 }
