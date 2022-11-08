@@ -133,7 +133,7 @@ htmlServicios(servicios)
 
 const pedirServicios = async () => {
     const resp = await fetch ('./data/data.json');
-    const data = await resp;
+    const data = await resp.json();
     console.log(data);
 }
 
