@@ -26,7 +26,7 @@ edad = document.querySelector("#edadSelect"),
 agregar = document.querySelector("#agregar");
 
 grupoFamiliar = [];
-let familiaEnLs = JSON.parse(localStorage.getItem("grupoFamiliar")) || []
+let familiaEnLs = JSON.parse(localStorage.getItem("grupoFamiliar"))
 
 const guardarLocal = (clave, valor) => {
     localStorage.setItem(clave, valor)
@@ -249,7 +249,7 @@ function buscarPos (arr1, filtr) {
     }
 }
 
-if (familiaEnLs != "") {
+if (familiaEnLs != undefined) {
     grupoFamiliar = familiaEnLs
     htmlFamilia(grupoFamiliar)
     tabla.style.display = "table"
