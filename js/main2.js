@@ -40,6 +40,8 @@ const pedirServicios = async () => {
     servicios = data
 }
 
+pedirServicios()
+
 // const servicios = [
 //     {
 //         servicio: "Ortodoncia",
