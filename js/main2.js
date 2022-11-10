@@ -38,6 +38,34 @@ const pedirServicios = async () => {
     const data = await resp.json();
     console.log(data);
     servicios = data
+
+    // HTML Listar servicios 
+function htmlServicios(arr) {
+    cardsServicios.innerHTML = ""
+    let html = "";
+    for (const item of arr) {
+        let planes = ""
+        item.p210 && (planes = planes + "210, ")
+        item.p310 && (planes = planes + "310, ")
+        item.p410 && (planes = planes + "410")
+        html = `<div class="col">
+            <div class="card h-100" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">${item.servicio}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">${item.aclaracion}</h6>
+                    <p class="card-text">${item.descripcion}</p>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">Disponible en plan: ${planes}</small>
+                </div>
+            </div>
+        </div>`
+        cardsServicios.innerHTML += html
+    }
+}
+
+htmlServicios(servicios)
+
 }
 
 pedirServicios()
@@ -113,32 +141,7 @@ pedirServicios()
 
 
 
-// HTML Listar servicios 
-function htmlServicios(arr) {
-    cardsServicios.innerHTML = ""
-    let html = "";
-    for (const item of arr) {
-        let planes = ""
-        item.p210 && (planes = planes + "210, ")
-        item.p310 && (planes = planes + "310, ")
-        item.p410 && (planes = planes + "410")
-        html = `<div class="col">
-            <div class="card h-100" style="width: 18rem;">
-                <div class="card-body">
-                    <h5 class="card-title">${item.servicio}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">${item.aclaracion}</h6>
-                    <p class="card-text">${item.descripcion}</p>
-                </div>
-                <div class="card-footer">
-                    <small class="text-muted">Disponible en plan: ${planes}</small>
-                </div>
-            </div>
-        </div>`
-        cardsServicios.innerHTML += html
-    }
-}
 
-htmlServicios(servicios)
 
 
 
