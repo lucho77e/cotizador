@@ -36,82 +36,11 @@ const guardarLocal = (clave, valor) => {
 const pedirServicios = async () => {
     const resp = await fetch ('./data/data.json');
     const data = await resp.json();
-    console.log(data);
     servicios = data
     htmlServicios(servicios)
 }
 
 pedirServicios()
-
-// const servicios = [
-//     {
-//         servicio: "Ortodoncia",
-//         aclaracion: "Para menores de 18 años",
-//         descripcion: "Cobertura con prestadores de cartilla con autorización previa",
-//         p210: false,
-//         p310: true,
-//         p410: true,
-//     },
-//     {
-//         servicio: "Prótesis nacionales",
-//         aclaracion: "Para cualquier tipo de cirugía",
-//         descripcion: "Con autorización previa",
-//         p210: true,
-//         p310: true,
-//         p410: true,
-//     },
-//     {
-//         servicio: "Consultas médicas",
-//         aclaracion: "Con cualquier especialista",
-//         descripcion: "Sin autorización previa y sin límites",
-//         p210: true,
-//         p310: true,
-//         p410: true,
-//     },
-//     {
-//         servicio: "Análisis de laboratorio",
-//         aclaracion: "Con prestadores de cartilla",
-//         descripcion: "Sin autorización previa y sin límites",
-//         p210: true,
-//         p310: true,
-//         p410: true,
-//     },
-//     {
-//         servicio: "Prótesis internacionales",
-//         aclaracion: "Para cualquier tipo de cirugía",
-//         descripcion: "Con autorización previa",
-//         p210: false,
-//         p310: false,
-//         p410: true,
-//     },
-//     {
-//         servicio: "Psicología",
-//         aclaracion: "Hasta 30 sesiones por año",
-//         descripcion: "Con autorización previa",
-//         p210: true,
-//         p310: true,
-//         p410: true,
-//     },
-//     {
-//         servicio: "Kinesiología",
-//         aclaracion: "Hasta 30 sesiones por año",
-//         descripcion: "Con autorización previa",
-//         p210: true,
-//         p310: true,
-//         p410: true,
-//     },
-//     {
-//         servicio: "Nutrición",
-//         aclaracion: "Hasta 30 sesiones por año",
-//         descripcion: "Con autorización previa",
-//         p210: true,
-//         p310: true,
-//         p410: true,
-//     },
-// ];
-
-
-
 
 
 // HTML Listar servicios 
@@ -138,12 +67,6 @@ function htmlServicios(arr) {
         cardsServicios.innerHTML += html
     }
 }
-
-
-
-
-
-
 
 // Limpiar campos
 function limpiarCampos() {
@@ -194,9 +117,6 @@ function htmlFamilia(arr) {
         })
     });
 }
-
-
-
 
 // Listener del Radio Tipo Afiliado
 function escucharRadioTipo() {
@@ -270,7 +190,6 @@ agregar.addEventListener('click', (e)=> {
         htmlFamilia(grupoFamiliar)
     }
 });
-
 
 
 // Busqueda
