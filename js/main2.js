@@ -265,7 +265,7 @@ if (familiaEnLs != undefined) {
     grupoFamiliar = familiaEnLs
     htmlFamilia(grupoFamiliar)
 
-    if (familiaEnLs != []) {
+    if (familiaEnLs.lenght == 0) {
         tabla.style.display = "table"
     }
     
