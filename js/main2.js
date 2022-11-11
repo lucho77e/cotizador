@@ -264,7 +264,11 @@ function buscarPos (arr1, filtr) {
 if (familiaEnLs != undefined) {
     grupoFamiliar = familiaEnLs
     htmlFamilia(grupoFamiliar)
-    tabla.style.display = "table"
+
+    if (familiaEnLs != []) {
+        tabla.style.display = "table"
+    }
+    
 
     for (const familiar of grupoFamiliar) {
         if (familiar.tipo == "Titular") {
