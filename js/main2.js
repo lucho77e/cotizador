@@ -2,7 +2,7 @@
 
 let searchKey = ""
 let radioSelected
-let planSelected = 0
+let planSelected = "p210"
 let arrayBotones = document.querySelectorAll("#botBorrar");
 let tipo
 let posicion
@@ -158,7 +158,6 @@ escucharRadioTipo()
 
 // Listener del Radio plan
 function escucharRadioPlan() {
-    planSelected = 0
     for (const radio of planElegido) {
         radio.addEventListener('change', ()=>{
             if (radio.checked) {
