@@ -2,6 +2,7 @@
 
 let searchKey = ""
 let radioSelected
+let planSelected = 0
 let arrayBotones = document.querySelectorAll("#botBorrar");
 let tipo
 let posicion
@@ -12,7 +13,10 @@ const multiplicador = {
     mas26 : 1.1,
     mas36 : 1.25,
     adicionalHijo : 0.4,
-    iva : 1.21
+    iva : 1.21,
+    p210 : 1,
+    p310 : 1.15,
+    p410 : 1.3
 };
 
 const valorCuotaLista = 10000;
@@ -24,6 +28,7 @@ radioConyuge= document.querySelector("#conyuge"),
 btnCotizar = document.querySelector("#cotizar"),
 tablaFamilia = document.querySelector("#tablaFamilia"),
 tabla = document.querySelector("#tabla"),
+planElegido = document.querySelector("plan"),
 nombre = document.querySelector("#nombreApellido"),
 edad = document.querySelector("#edadSelect"),
 agregar = document.querySelector("#agregar");
@@ -150,6 +155,21 @@ function escucharRadioTipo() {
 }
 escucharRadioTipo()
 
+
+// Listener del Radio plan
+function escucharRadioPlan() {
+    planSelected = 0
+    for (const radio of planElegido) {
+        radio.addEventListener('change', ()=>{
+            if (radio.checked) {
+                planSelected = radio.value
+            }
+        })
+    }
+}
+
+escucharRadioPlan()
+
 // Funcion agregadora de familiar creado al grupo familiar
 function cargarFamiliar(arr, familiar) {
     return arr.push(familiar);
@@ -242,7 +262,7 @@ btnCotizar.addEventListener("click", () => {
     analisisGrupoFamiliar(grupoFamiliar)
     Swal.fire(
         'Tu cotización',
-        'El precio de tu plan es ' + cotizacion,
+        'El precio de tu plan es ' + (cotizacion * multiplicador[planSelected]),
         'success'
       )
 })
@@ -251,12 +271,6 @@ btnCotizar.addEventListener("click", () => {
 function buscarPos (arr1, filtr) {
     let id = 0
     for (const item1 of arr1) {
-        // if (item1.id == filtr) {
-        //     posicion = id   
-        // } else {
-        //     id = id + 1
-        // }
-
         item1.id == filtr ? posicion = id : id = id + 1
     }
 }
