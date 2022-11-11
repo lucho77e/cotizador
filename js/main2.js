@@ -15,7 +15,7 @@ const multiplicador = {
     adicionalHijo : 0.4,
     iva : 1.21,
     p210 : 1,
-    p310 : 1.15,
+    p310 : 1.2,
     p410 : 1.3
 };
 
