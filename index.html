@@ -35,12 +35,12 @@
                     <form>
                         <legend class="fs-6 fw-bold text-primary">Añade tu grupo familiar</legend>
                         <label for="tipoSocio" class="form-label">Tipo afiliado</label>
-                        <div class="d-flex flex-row justify-content-between mb-3 w-50">
-                            <div class="form-check">
+                        <div class="d-flex flex-row justify-content-between mb-3 w-75">
+                            <div class="form-check" id="titular">
                                 <input class="form-check-input" type="radio" name="tipoRadio" value="Titular">
                                 <label class="form-check-label" for="tipoRadio">Titular</label>
                             </div>
-                            <div class="form-check">
+                            <div class="form-check" id="conyuge">
                                 <input class="form-check-input" type="radio" name="tipoRadio" value="Cónyuge">
                                 <label class="form-check-label" for="tipoRadio">Cónyuge</label>
                             </div>
@@ -57,10 +57,6 @@
                         <div class="mb-3">
                             <label for="edadSelect" class="form-label">Edad</label>
                             <select class="form-select" id="edadSelect" aria-label="Floating label select example">                         
-                                <option value="Entre 1 y 17">Entre 1 y 17</option>
-                                <option value="Entre 18 y 25">Entre 18 y 25</option>
-                                <option value="Entre 26 y 35">Entre 26 y 35</option>
-                                <option value="Más de 36">Más de 36</option>
                             </select>
                         </div>
                         <button type="submit" id="agregar" class="btn btn-primary">Agregar</button>
@@ -77,30 +73,20 @@
                            <!-- contenido dinamico -->
                         </tbody>
                         </table>
-                        <legend class="fs-6 fw-bold text-primary mt-4">Selecciona las condiciones de contratación</legend>
-                        <label for="tipoSocio" class="form-label">Tipo de contratación</label>
                         <div class=" mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                                <label class="form-check-label" for="flexRadioDefault1">Derivando aportes como trabajador en Relación de dependencia o Monotributo</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                                <label class="form-check-label" for="flexRadioDefault1">En forma particular</label>
-                            </div>
                             <legend class="fs-6 fw-bold text-primary mt-4">Elige un plan</legend>
                             <div class="d-flex flex-row justify-content-between mb-3 w-50">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                                    <label class="form-check-label" for="flexRadioDefault1">210</label>
+                                    <input class="form-check-input" type="radio" name="plan" id="plan" value="p210" checked>
+                                    <label class="form-check-label" for="plan">210</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                                    <label class="form-check-label" for="flexRadioDefault1">310</label>
+                                    <input class="form-check-input" type="radio" name="plan" id="plan" value="p310">
+                                    <label class="form-check-label" for="plan">310</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                                    <label class="form-check-label" for="flexRadioDefault1">410</label>
+                                    <input class="form-check-input" type="radio" name="plan" id="plan" value="p410">
+                                    <label class="form-check-label" for="plan">410</label>
                                 </div>
                             </div>
                         </div>
@@ -109,6 +95,7 @@
             </div>         
             </section>
         </main>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.2/dist/sweetalert2.all.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
         <script src="./js/main2.js"></script>
     </body>

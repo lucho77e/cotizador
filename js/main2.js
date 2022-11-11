@@ -1,64 +1,59 @@
+//Declaro variables
+
 let searchKey = ""
 let radioSelected
-let arrayBotones = document.querySelectorAll("#botBorrar")
+let planSelected = "p210"
+let arrayBotones = document.querySelectorAll("#botBorrar");
+let tipo
+let posicion
+let servicios
+let cotizacion
 
 const multiplicador = {
     mas26 : 1.1,
     mas36 : 1.25,
     adicionalHijo : 0.4,
-    iva : 1.21
+    iva : 1.21,
+    p210 : 1,
+    p310 : 1.2,
+    p410 : 1.3
 };
 
 const valorCuotaLista = 10000;
 
 const search = document.querySelector("#buscador"),
 cardsServicios = document.querySelector("#cards"),
+radioTitular= document.querySelector("#titular"),
+radioConyuge= document.querySelector("#conyuge"),
 btnCotizar = document.querySelector("#cotizar"),
 tablaFamilia = document.querySelector("#tablaFamilia"),
 tabla = document.querySelector("#tabla"),
-tipo = document.querySelectorAll('input[name="tipoRadio"]'),
+planElegido = document.querySelectorAll("#plan"),
 nombre = document.querySelector("#nombreApellido"),
 edad = document.querySelector("#edadSelect"),
 agregar = document.querySelector("#agregar");
 
 grupoFamiliar = [];
 
+// Recupero familiares guardados en Local Storage
+let familiaEnLs = JSON.parse(localStorage.getItem("grupoFamiliar"))
 
-const servicios = [
-    {
-        servicio: "Ortodoncia",
-        aclaracion: "Para menores de 18 años",
-        descripcion: "Cobertura con prestadores de cartilla con autorización previa",
-        p210: false,
-        p310: true,
-        p410: true,
-    },
-    {
-        servicio: "Prótesis nacionales",
-        aclaracion: "Para cualquier tipo de cirugía",
-        descripcion: "Con autorización previa",
-        p210: true,
-        p310: true,
-        p410: true,
-    },
-    {
-        servicio: "Consultas médicas",
-        aclaracion: "Con cualquier especialista",
-        descripcion: "Sin autorización previa y sin límites",
-        p210: true,
-        p310: true,
-        p410: true,
-    },
-    {
-        servicio: "Prótesis internacionales",
-        aclaracion: "Para cualquier tipo de cirugía",
-        descripcion: "Con autorización previa",
-        p210: false,
-        p310: false,
-        p410: true,
-    },
 
-];
+//Función para guardar cosas en Local Storage
+const guardarLocal = (clave, valor) => {
+    localStorage.setItem(clave, valor)
+}
+
+// Función para consultar Data.json
+const pedirServicios = async () => {
+    const resp = await fetch ('./data/data.json');
+    const data = await resp.json();
+    servicios = data
+    htmlServicios(servicios)
+}
+
+// Consulto data.json
+pedirServicios()
 
 
 // HTML Listar servicios 
@@ -86,9 +81,6 @@ function htmlServicios(arr) {
     }
 }
 
-htmlServicios(servicios)
-
-
 // Limpiar campos
 function limpiarCampos() {
     for (const radio of tipo) {
@@ -109,31 +101,73 @@ function htmlFamilia(arr) {
         <td>${item.nombre}</td>
         <td>${item.edad}</td>
         <td>${item.tipo}</td>
-        <td><button type="button" id="botBorrar" class="btn btn-danger btn-sm">Borrar</button></td>
+        <td><button type="button" id="${item.id}" class="btn btn-danger btn-sm">Borrar</button></td>
         </tr>`
         tablaFamilia.innerHTML += html
     }
     limpiarCampos()
-}
 
+    //Agrego listener a cada botón de borrar familiar
+    arrayBotones = document.querySelectorAll(".btn-danger");
+    arrayBotones.forEach(btn => {
+        btn.addEventListener("click", ()=> {
+            buscarPos (grupoFamiliar, btn.id);
+            if (grupoFamiliar[posicion].tipo == "Titular") {
+                radioTitular.innerHTML = `<input class="form-check-input" type="radio" name="tipoRadio" value="Titular">
+                <label class="form-check-label" for="tipoRadio">Titular</label>`
+                escucharRadioTipo()
+            } else if (grupoFamiliar[posicion].tipo == "Cónyuge") {
+                radioConyuge.innerHTML = `<input class="form-check-input" type="radio" name="tipoRadio" value="Cónyuge">
+                <label class="form-check-label" for="tipoRadio">Cónyuge</label>`
+                escucharRadioTipo()
+            }
+            grupoFamiliar = grupoFamiliar.filter(el => el.id != btn.id)
+            if (grupoFamiliar == "") {
+                tabla.style.display = "none";
+            }
+            guardarLocal("grupoFamiliar", JSON.stringify(grupoFamiliar))
+            htmlFamilia(grupoFamiliar)
+            
+
+        })
+    });
+}
 
 // Listener del Radio Tipo Afiliado
-for (const radio of tipo) {
-    radio.addEventListener('change', ()=>{
-        if (radio.checked) {
-            radioSelected = radio.value
-            if (radio.value != "Hijo") {
-                edad.innerHTML = `<option value="Entre 18 y 25">Entre 18 y 25</option>
-                <option value="Entre 26 y 35">Entre 26 y 35</option>
-                <option value="Más de 36">Más de 36</option>`
-            } else {
-                edad.innerHTML = `<option value="Entre 1 y 17">Entre 1 y 17</option>
-                <option value="Entre 18 y 25">Entre 18 y 25</option>`
+function escucharRadioTipo() {
+    radioSelected = ""
+    tipo = document.querySelectorAll('input[name="tipoRadio"]')
+    for (const radio of tipo) {
+        radio.addEventListener('change', ()=>{
+            if (radio.checked) {
+                radioSelected = radio.value
+                if (radio.value != "Hijo") {
+                    edad.innerHTML = `<option value="Entre 18 y 25">Entre 18 y 25</option>
+                    <option value="Entre 26 y 35">Entre 26 y 35</option>
+                    <option value="Más de 36">Más de 36</option>`
+                } else {
+                    edad.innerHTML = `<option value="Entre 1 y 17">Entre 1 y 17</option>
+                    <option value="Entre 18 y 25">Entre 18 y 25</option>`
+                }
             }
-        }
-    })
+        })
+    }
+}
+escucharRadioTipo()
+
+
+// Listener del Radio plan
+function escucharRadioPlan() {
+    for (const radio of planElegido) {
+        radio.addEventListener('change', ()=>{
+            if (radio.checked) {
+                planSelected = radio.value
+            }
+        })
+    }
 }
 
+escucharRadioPlan()
 
 // Funcion agregadora de familiar creado al grupo familiar
 function cargarFamiliar(arr, familiar) {
@@ -146,43 +180,57 @@ function familiar(tipo, nombre, edad) {
     this.tipo = tipo
     this.nombre = nombre
     this.edad = edad
+    this.id = Date.now()
 }
+
+
 
 // Botón agregar familiar
 agregar.addEventListener('click', (e)=> {
     e.preventDefault();
-    const familiarNuevo = new familiar(
-        radioSelected,
-        nombre.value,
-        edad.value
-    )
-    cargarFamiliar(grupoFamiliar, familiarNuevo)
-    if (grupoFamiliar != []) {
-        tabla.style.display = "table";
-    }
-    htmlFamilia(grupoFamiliar)
-    arrayBotones = document.querySelectorAll("#botBorrar");
-    arrayBotones.forEach(btn => {
-        btn.addEventListener("click", ()=> {
-            grupoFamiliar.pop()
-            if (grupoFamiliar = []) {
-                tabla.style.display = "none";
-            }
-            htmlFamilia(grupoFamiliar)
+    if ((radioSelected == "") || (nombre.value == "") || (edad.value == "")) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Debes completar todos los campos!',
         })
-    });
+    } else {
+        const familiarNuevo = new familiar(
+            radioSelected,
+            nombre.value,
+            edad.value
+        )
+        cargarFamiliar(grupoFamiliar, familiarNuevo)
+        if (grupoFamiliar != []) {
+            tabla.style.display = "table";
+        }
+        if (radioSelected == "Titular") {
+            radioTitular.innerHTML = `<input class="form-check-input" type="radio" name="tipoRadio" value="Titular" disabled>
+            <label class="form-check-label" for="tipoRadio">Titular</label>`
+            escucharRadioTipo()
+        } else if (radioSelected == "Cónyuge") {
+            radioConyuge.innerHTML = `<input class="form-check-input" type="radio" name="tipoRadio" value="Cónyuge" disabled>
+            <label class="form-check-label" for="tipoRadio">Cónyuge</label>`
+            escucharRadioTipo()
+        } else {
+            escucharRadioTipo()
+        }
+        guardarLocal("grupoFamiliar", JSON.stringify(grupoFamiliar))
+        htmlFamilia(grupoFamiliar)
+    }
 });
+
 
 // Busqueda
 function filtrarServicio(arr, filtro){
     const filtrado = arr.filter((el) => {
-        return el.servicio.includes(filtro);
+        return el.servicio.toLowerCase().includes(filtro);
     })
     htmlServicios(filtrado)
 }
 
 
-let cotizacion
+
 
 // Calcular cotizacion
 function analisisGrupoFamiliar (arr) {
@@ -202,14 +250,50 @@ function analisisGrupoFamiliar (arr) {
     }
 }
 
-// Listener
+// Listener del buscador
 search.addEventListener("input", () => {
-    searchKey = search.value
+    searchKey = search.value.toLowerCase()
     filtrarServicio(servicios, searchKey)
 })
 
+// Listener del botón para cotizar
 btnCotizar.addEventListener("click", () => {
     analisisGrupoFamiliar(grupoFamiliar)
-    alert(cotizacion)
+    Swal.fire(
+        'Tu cotización',
+        'El precio de tu plan es ' + (cotizacion * multiplicador[planSelected]),
+        'success'
+      )
 })
 
+// Funcion buscar posicion en array
+function buscarPos (arr1, filtr) {
+    let id = 0
+    for (const item1 of arr1) {
+        item1.id == filtr ? posicion = id : id = id + 1
+    }
+}
+
+
+// Represento datos traídos de data.json 
+if (familiaEnLs != undefined) {
+    grupoFamiliar = familiaEnLs
+    htmlFamilia(grupoFamiliar)
+
+    if (familiaEnLs.lenght !== 0) {
+        tabla.style.display = "table"
+    }
+    
+
+    for (const familiar of grupoFamiliar) {
+        if (familiar.tipo == "Titular") {
+            radioTitular.innerHTML = `<input class="form-check-input" type="radio" name="tipoRadio" value="Titular" disabled>
+            <label class="form-check-label" for="tipoRadio">Titular</label>`
+        } else if (familiar.tipo == "Cónyuge") {
+            radioConyuge.innerHTML = `<input class="form-check-input" type="radio" name="tipoRadio" value="Cónyuge" disabled>
+            <label class="form-check-label" for="tipoRadio">Cónyuge</label>`
+    }}
+
+} else {
+    tabla.style.display = "none"
+}
