@@ -1,9 +1,12 @@
+//Declaro variables
+
 let searchKey = ""
 let radioSelected
 let arrayBotones = document.querySelectorAll("#botBorrar");
 let tipo
 let posicion
 let servicios
+let cotizacion
 
 const multiplicador = {
     mas26 : 1.1,
@@ -26,13 +29,17 @@ edad = document.querySelector("#edadSelect"),
 agregar = document.querySelector("#agregar");
 
 grupoFamiliar = [];
+
+// Recupero familiares guardados en Local Storage
 let familiaEnLs = JSON.parse(localStorage.getItem("grupoFamiliar"))
 
+
+//Función para guardar cosas en Local Storage
 const guardarLocal = (clave, valor) => {
     localStorage.setItem(clave, valor)
 }
 
-// Consulto Data.json
+// Función para consultar Data.json
 const pedirServicios = async () => {
     const resp = await fetch ('./data/data.json');
     const data = await resp.json();
@@ -40,6 +47,7 @@ const pedirServicios = async () => {
     htmlServicios(servicios)
 }
 
+// Consulto data.json
 pedirServicios()
 
 
@@ -93,6 +101,8 @@ function htmlFamilia(arr) {
         tablaFamilia.innerHTML += html
     }
     limpiarCampos()
+
+    //Agrego listener a cada botón de borrar familiar
     arrayBotones = document.querySelectorAll(".btn-danger");
     arrayBotones.forEach(btn => {
         btn.addEventListener("click", ()=> {
@@ -201,7 +211,7 @@ function filtrarServicio(arr, filtro){
 }
 
 
-let cotizacion
+
 
 // Calcular cotizacion
 function analisisGrupoFamiliar (arr) {
@@ -221,12 +231,13 @@ function analisisGrupoFamiliar (arr) {
     }
 }
 
-// Listener
+// Listener del buscador
 search.addEventListener("input", () => {
     searchKey = search.value.toLowerCase()
     filtrarServicio(servicios, searchKey)
 })
 
+// Listener del botón para cotizar
 btnCotizar.addEventListener("click", () => {
     analisisGrupoFamiliar(grupoFamiliar)
     Swal.fire(
@@ -234,7 +245,6 @@ btnCotizar.addEventListener("click", () => {
         'El precio de tu plan es ' + cotizacion,
         'success'
       )
-
 })
 
 // Funcion buscar posicion en array
@@ -249,6 +259,8 @@ function buscarPos (arr1, filtr) {
     }
 }
 
+
+// Represento datos traídos de data.json 
 if (familiaEnLs != undefined) {
     grupoFamiliar = familiaEnLs
     htmlFamilia(grupoFamiliar)
