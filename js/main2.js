@@ -251,11 +251,13 @@ btnCotizar.addEventListener("click", () => {
 function buscarPos (arr1, filtr) {
     let id = 0
     for (const item1 of arr1) {
-        if (item1.id == filtr) {
-            posicion = id   
-        } else {
-            id = id + 1
-        }
+        // if (item1.id == filtr) {
+        //     posicion = id   
+        // } else {
+        //     id = id + 1
+        // }
+
+        item1.id == filtr ? posicion = id : id = id + 1
     }
 }
 
